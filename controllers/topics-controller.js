@@ -5,11 +5,10 @@ const { selectTopics } = require("../models/topics-model");
 function getTopics(req, res, next) {
   selectTopics()
     .then((topics) => {
-      if (topics.length > 0) {
-        res.status(200).send(topics);
-      }
+        res.status(200).send(topics)
     })
-    .catch((err) => {
+      .catch((err) => {
+        console.log(err, '---err')
       next(err);
     });
 }
