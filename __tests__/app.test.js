@@ -7,6 +7,7 @@ const data = require("../db/data/test-data");
 const endpointsJSON = require("../endpoints.json");
 const endpointsJS = JSON.parse(JSON.stringify(endpointsJSON));
 
+
 //PRE AND POST TEST FUNCTIONS
 afterAll(() => {
   return db.end();
