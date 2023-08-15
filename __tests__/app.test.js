@@ -87,9 +87,8 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles/1")
         .then(({ body }) => {
-          if (Object.keys(body).length > 1) {
-            expect(body).toMatchObject(articleTemplate);
-          }
+          expect(body).toMatchObject(articleTemplate);
+          expect(body.article_id).toBe(1);
         });
     });
     test("Should return status 404 and error message if article_id does not exist", () => {
@@ -100,13 +99,12 @@ describe("Northcoders News API ", () => {
           expect(msg).toBe(`We don't have that article!`);
         });
     });
-    test("Should return status 200 with error message if article_id exists but no article returned", () => {
+    test("Should return status 400 and error message if article_id is invalid type", () => {
       return request(app)
-        .get("/api/articles/2")
-        .expect(200)
-        .then(({ body }) => {
-          if (Object.keys(body).length <= 1)
-            expect(body.msg).toBe(`We can't seem to find that!`);
+        .get("/api/articles/bananaPancakes")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`That input is invalid`);
         });
     });
   });

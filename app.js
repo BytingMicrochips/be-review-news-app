@@ -6,13 +6,14 @@ const { getArticles } = require("./controllers/articles-controller.js");
 
 //ENDPOINTS
 app.get("/api/topics", getTopics);
-
 app.get("/api/articles/:article_id", getArticles);
 
 //ERROR HANDLING
-
-app.use((req, res) => {
-  res.status(res.status).send({ msg: `We can't seem to find that!` });
+app.use((err, req, res, next) => {
+  if (err.code === "22P02") {
+    res.status(400).send({ msg: `That input is invalid` });
+  }
+  next(err);
 });
 
 app.use((err, req, res, next) => {
