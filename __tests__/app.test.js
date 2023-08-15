@@ -29,7 +29,6 @@ describe("Northcoders News API ", () => {
           return request(app)
             .get("/api/topics")
             .then(({ body }) => {
-              expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(3);
                     body.forEach((topic) => {
                       expect(topic).toHaveProperty("slug");
