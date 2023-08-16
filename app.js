@@ -12,12 +12,17 @@ app.get("/api/articles/:article_id", getArticles);
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: `That input is invalid` });
+  } else {
+    next(err);
   }
-  next(err);
 });
 
 app.use((err, req, res, next) => {
-  res.status(404).send({ msg: `We don't have that article!` });
+  if (err.status === 404) {
+    res.status(err.status).send({ msg: `We can't find that!` });
+  } else {
+    next(err);
+   }
 });
 
 app.use((err, req, res, next) => {

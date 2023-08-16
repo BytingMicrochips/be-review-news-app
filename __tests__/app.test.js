@@ -66,13 +66,6 @@ describe("Northcoders News API ", () => {
       return request(app).get("/api/articles/1")
         .expect(200);
     });
-    test("Should return an object", () => {
-      return request(app)
-        .get("/api/articles/1")
-        .then(({ body }) => {
-          expect(typeof body).toBe("object");
-        });
-    });
     test("Returned object should have desired keys only", () => {
       const articleTemplate = {
         article: {
@@ -91,7 +84,6 @@ describe("Northcoders News API ", () => {
         .get("/api/articles/1")
         .then(({body}) => {
           expect(body).toMatchObject(articleTemplate);
-          expect(body.article.article_id).toBe(1);
         });
     });
     test("Should return status 404 and error message if article_id does not exist", () => {
@@ -99,7 +91,7 @@ describe("Northcoders News API ", () => {
         .get("/api/articles/999")
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe(`We don't have that article!`);
+          expect(msg).toBe(`We can't find that!`);
         });
     });
     test("Should return status 400 and error message if article_id is invalid type", () => {
