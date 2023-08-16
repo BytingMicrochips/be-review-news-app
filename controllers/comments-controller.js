@@ -5,7 +5,6 @@ const { selectComments } = require("../models/comments-model");
 function getComments(req, res, next) {
   selectComments(req.params.article_id)
       .then((comments) => {
-          console.log(comments)
       res.status(200).send(comments);
     })
       .catch((err) => {

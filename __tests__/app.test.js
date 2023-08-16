@@ -120,8 +120,16 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles/3/comments")
         .then(({ body }) => {
-          expect(body[0]).toMatchObject(expectedShape)
+          expect(body[1]).toMatchObject(expectedShape)
         })
+    });
+    test("Should serve comments in order of most recent first", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .then(({ body }) => {
+          expect(body[0].comment_id).toBe(5);
+          expect(body[10].comment_id).toBe(9);
+        });
     });
     test("Should send code 400 if invalid article_id is entered", () => {
       return request(app)
