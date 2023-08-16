@@ -4,11 +4,8 @@ const { selectArticle } = require("../models/articles-model");
 // FUNCTION
 function getArticles(req, res, next) {
   selectArticle(req.params.article_id)
-    .then((modelReturn) => {
-      if (modelReturn.article === undefined) {
-        next(err)
-      }
-        res.status(200).send(modelReturn.article);
+    .then((rows) => {
+      res.status(200).send({ article: rows[0]});
     })
     .catch((err) => {
       next(err)

@@ -27,7 +27,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "Serves the corresponding article to the article_id requested",
+    "description": "Serves the corresponding article of the article_id requested in an object on key a of article",
     "queries": [],
     "exampleResponse": {
     "title": "UNCOVERED: catspiracy to bring down democracy",
