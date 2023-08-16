@@ -82,7 +82,7 @@ describe("Northcoders News API ", () => {
       };
       return request(app)
         .get("/api/articles/1")
-        .then(({body}) => {
+        .then(({ body }) => {
           expect(body).toMatchObject(articleTemplate);
         });
     });
@@ -103,4 +103,50 @@ describe("Northcoders News API ", () => {
         });
     });
   });
-});
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("Should return 200 status code", () => {
+      return request(app).get("/api/articles/1/comments")
+        .expect(200);
+    });
+    test("Should return an array of comment objects with desired keys", () => {
+      const expectedShape = {
+        comment_id: 10,
+        body: "git push origin master",
+        votes: 0,
+        author: "icellusedkars",
+        article_id: 3,
+        created_at: "2020-06-20T07:24:00.000Z",
+      };
+      return request(app)
+        .get("/api/articles/3/comments")
+        .then(({ body }) => {
+          expect(body[0]).toMatchObject(expectedShape)
+        })
+    });
+    test("Should send code 400 if invalid article_id is entered", () => {
+      return request(app)
+        .get("/api/articles/burritoSupreme/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe(`burritoSupreme is not a valid article_id`);
+        })
+    });
+    test("Should send code 404 if article_id has no comments", () => {
+      return request(app)
+        .get("/api/articles/8/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe(`We couldn't find any comments on that...`);
+        });
+    });
+    test("Should send code 404 if article_id doesn't exist", () => {
+      return request(app)
+        .get("/api/articles/888/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe(`We couldn't find any comments on that...`);
+        });
+    });
+    })
+  });
+
