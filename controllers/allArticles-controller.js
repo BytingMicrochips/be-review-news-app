@@ -1,5 +1,5 @@
 // REQUIRE
-const fetchAllArticles = require("../models/all-articles-model");
+const {fetchAllArticles} = require("../models/all-articles-model");
 
 // FUNCTION
 function getAllArticles(req, res, next) {
@@ -8,9 +8,10 @@ function getAllArticles(req, res, next) {
         return res.status(200).send(articles);
       })
       .catch((err) => {
+        console.log(err)
         next(err);
       });
 }
 
 //EXPORTS
-module.exports = { getAllArticles };
+module.exports =  {getAllArticles} ;

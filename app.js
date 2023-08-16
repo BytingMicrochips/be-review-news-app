@@ -9,6 +9,22 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getAllArticles);
 
 //ERROR HANDLING 
+42601;
+app.use((err, req, res, next) => {
+  if (err.code === '42601') {
+    res.status(500).send(`We are experiencing difficulties... try again later`);
+  } else {
+    next(err);
+  }
+});
+
+app.use((err, req, res, next) => {
+  if (err.status && err.msg) {
+    res.status(err.status).send(err.msg);
+  } else {
+    next(err);
+  }
+});
 app.use((err, req, res, next) => {
     res.status(500).send({msg: `Sorry! We can't do that right now`})
 })
