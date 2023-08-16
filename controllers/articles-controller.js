@@ -14,6 +14,3 @@ function getArticles(req, res, next) {
 
 // EXPORTS
 module.exports = { getArticles };
-
-
-//  const numberOnlyRegex = /^[0-9]*$/
