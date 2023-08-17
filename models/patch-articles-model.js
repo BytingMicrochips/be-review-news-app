@@ -3,7 +3,6 @@ const db = require("../db/connection.js");
 
 //FUNCTION
 function patchVotes(article_id, body) {
-  console.log(Object.keys(body));
   if (typeof body.inc_votes !== "number") {
     return Promise.reject({
       status: 400,
@@ -22,7 +21,7 @@ function patchVotes(article_id, body) {
           return rows[0];
         } else {
           return Promise.reject({
-            status: 400,
+            status: 404,
             msg: `That article doesn't exist`,
           });
         }

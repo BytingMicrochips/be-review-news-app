@@ -103,17 +103,6 @@ describe("Northcoders News API ", () => {
     });
   });
   describe(`PATCH /api/articles/:article_id`, () => {
-    const matchedShape = {
-      article_id: 1,
-      title: "Living in the shadow of a great man",
-      topic: "mitch",
-      author: "butter_bridge",
-      body: "I find this existence challenging",
-      created_at: `2020-07-09T20:11:00.000Z`,
-      votes: 100,
-      article_img_url:
-        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-    };
     test("Should return status 200 when succcesfully patched article", () => {
       return request(app)
         .patch(`/api/articles/1`)
@@ -121,6 +110,17 @@ describe("Northcoders News API ", () => {
         .expect(200);
     });
     test("Should return the chosed article object", () => {
+          const matchedShape = {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: `2020-07-09T20:11:00.000Z`,
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          };
       return request(app)
         .patch(`/api/articles/1`)
         .send({ inc_votes: 0 })
@@ -162,11 +162,11 @@ describe("Northcoders News API ", () => {
           expect(msg).toBe(`That input is invalid`);
         });
     });
-    test("Should send status 400 and error message if article_id doesn't exist", () => {
+    test("Should send status 404 and error message if article_id doesn't exist", () => {
       return request(app)
         .patch(`/api/articles/999`)
         .send({ inc_votes: 25 })
-        .expect(400)
+        .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe(`That article doesn't exist`);
         });
