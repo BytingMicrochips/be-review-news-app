@@ -17,11 +17,9 @@ beforeEach(() => {
 
 //TEST SUITE
 describe("Northcoders News API ", () => {
-  test('Should return status 404 if invalid endpoint accessed', () => {
-    return request(app)
-      .get("/api/banana")
-      .expect(404)
-  })
+  test("Should return status 404 if invalid endpoint accessed", () => {
+    return request(app).get("/api/banana").expect(404);
+  });
   describe("GET /api/topics", () => {
     test("Should return 200 status code", () => {
       return request(app).get("/api/topics").expect(200);
@@ -47,7 +45,7 @@ describe("Northcoders News API ", () => {
           });
         });
     });
-  })
+  });
   describe("GET /api/articles", () => {
     test("Should return 200 status code", () => {
       return request(app).get("/api/articles").expect(200);
@@ -62,27 +60,28 @@ describe("Northcoders News API ", () => {
         votes: 100,
         article_img_url:
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        comment_count: 11
+        comment_count: 11,
       };
       return request(app)
         .get("/api/articles")
         .then(({ body }) => {
-          expect(Array.isArray(body.articles)).toBe(true)
-          expect(body.articles.length).toBe(13)
-          expect(body.articles[6]).toMatchObject(expectedObject)
+          expect(Array.isArray(body.articles)).toBe(true);
+          expect(body.articles.length).toBe(13);
+          expect(body.articles[6]).toMatchObject(expectedObject);
           body.articles.forEach((dataSet) => {
-            expect(Object.keys(dataSet).length).toBe(8)
-          })
-      });
+            expect(Object.keys(dataSet).length).toBe(8);
+          });
+        });
     });
     test("Should sort the returned articles in order of created_at descending", () => {
       return request(app)
         .get("/api/articles")
         .then(({ body }) => {
-          expect(body.articles).toBeSortedBy("created_at", {descending : true})
-        })
-    })
-   })
+          expect(body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
   });
   describe("GET /api/articles/:article_id", () => {
     test("Should return 200 status code", () => {
@@ -133,17 +132,17 @@ describe("Northcoders News API ", () => {
         .expect(200);
     });
     test("Should return the chosed article object", () => {
-          const matchedShape = {
-            article_id: 1,
-            title: "Living in the shadow of a great man",
-            topic: "mitch",
-            author: "butter_bridge",
-            body: "I find this existence challenging",
-            created_at: `2020-07-09T20:11:00.000Z`,
-            votes: 100,
-            article_img_url:
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          };
+      const matchedShape = {
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: `2020-07-09T20:11:00.000Z`,
+        votes: 100,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      };
       return request(app)
         .patch(`/api/articles/1`)
         .send({ inc_votes: 0 })
@@ -206,8 +205,7 @@ describe("Northcoders News API ", () => {
   });
   describe("GET /api/articles/:article_id/comments", () => {
     test("Should return 200 status code", () => {
-      return request(app).get("/api/articles/1/comments")
-        .expect(200);
+      return request(app).get("/api/articles/1/comments").expect(200);
     });
     test("Should return an array of comment objects with desired keys", () => {
       const expectedShape = {
@@ -221,14 +219,16 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles/3/comments")
         .then(({ body }) => {
-          expect(body.comments[1]).toMatchObject(expectedShape)
-        })
+          expect(body.comments[1]).toMatchObject(expectedShape);
+        });
     });
     test("Should serve comments in order of most recent first", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .then(({ body }) => {
-          expect(body.comments).toBeSortedBy("created_at", {descending : true});
+          expect(body.comments).toBeSortedBy("created_at", {
+            descending: true,
+          });
         });
     });
     test("Should send code 400 if invalid article_id is entered", () => {
@@ -237,7 +237,7 @@ describe("Northcoders News API ", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe(`burritoSupreme is not a valid article_id`);
-        })
+        });
     });
     test("Should send code 200 and message if no comments found", () => {
       return request(app)
@@ -251,55 +251,56 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles/999/comments")
         .expect(404)
-        .then(({ body: {msg} }) => {
+        .then(({ body: { msg } }) => {
           expect(msg).toBe(`article_id 999 does not exist`);
         });
     });
-   describe("POST /api/articles/:article_id/comments", () => {
-          const commentThis = {
-            username: "butter_bridge",
-            body: `Did you just finish all the coffee?!`,
-          }; 
-          const matchedShape = {
-            comment_id: 19,
-            body: `Did you just finish all the coffee?!`,
-            article_id: 3,
-            author: "butter_bridge",
-            votes: 0,
-          };
-    test("Should return status 201 when new comment successfully posted", () => {
-      return request(app)
-        .post("/api/articles/3/comments")
-        .send({ ...commentThis })
-        .then(() => {
-          expect(201);
-        });
-    });
-    test("Should return posted comment showing all desired keys", () => {
-      return request(app)
-        .post("/api/articles/3/comments")
-        .send({ ...commentThis })
-        .then(({ body }) => {
-          expect(body.comment).toMatchObject({...matchedShape});
-        });
-    });
-    test("Should return 400 and error message if user attempts to post empty body", () => {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ username: "Monstera_Munch" })
-        .then(({ body: { msg } }) => {
-          expect(400)
-          expect(msg).toBe(`Nothing to post!`);
-        });
-    });
-    test("Should return 400 and error message if user attempts to post anonymously", () => {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({ body: "The mystery poster strikes again!" })
-        .then(({ body: { msg } }) => {
-          expect(400);
-          expect(msg).toBe(`Malformed request body, missing username key`);
-        });
+    describe("POST /api/articles/:article_id/comments", () => {
+      const commentThis = {
+        username: "butter_bridge",
+        body: `Did you just finish all the coffee?!`,
+      };
+      const matchedShape = {
+        comment_id: 19,
+        body: `Did you just finish all the coffee?!`,
+        article_id: 3,
+        author: "butter_bridge",
+        votes: 0,
+      };
+      test("Should return status 201 when new comment successfully posted", () => {
+        return request(app)
+          .post("/api/articles/3/comments")
+          .send({ ...commentThis })
+          .then(() => {
+            expect(201);
+          });
+      });
+      test("Should return posted comment showing all desired keys", () => {
+        return request(app)
+          .post("/api/articles/3/comments")
+          .send({ ...commentThis })
+          .then(({ body }) => {
+            expect(body.comment).toMatchObject({ ...matchedShape });
+          });
+      });
+      test("Should return 400 and error message if user attempts to post empty body", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ username: "Monstera_Munch" })
+          .then(({ body: { msg } }) => {
+            expect(400);
+            expect(msg).toBe(`Nothing to post!`);
+          });
+      });
+      test("Should return 400 and error message if user attempts to post anonymously", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ body: "The mystery poster strikes again!" })
+          .then(({ body: { msg } }) => {
+            expect(400);
+            expect(msg).toBe(`Malformed request body, missing username key`);
+          });
+      });
     });
   });
 });
