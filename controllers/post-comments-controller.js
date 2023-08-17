@@ -3,8 +3,8 @@ const {newComment} = require("../models/post-comment-model")
 //FUNCTION
 function postComments(req, res, next) {
   newComment(req.params.article_id, req.body)
-      .then((addedComment) => {
-      return res.status(201).send(addedComment);
+    .then((addedComment) => {
+      return res.status(201).send({comment : addedComment});
     })
       .catch((err) => {
       next(err);

@@ -3,7 +3,6 @@ const db = require("../db/connection.js");
 
 //FUNCTION
 function newComment(article_id, postingComment) {
-    let dateObj = new Date();
     if (!postingComment.body) {
         return Promise.reject({
             status: 400,
@@ -12,24 +11,16 @@ function newComment(article_id, postingComment) {
     }
     if (!postingComment.username) {
         return Promise.reject({
-            status: 400,
-            msg: `No anonymous posting allowed, please log in`,
-      });
-    }
-    if (Object.keys(postingComment).length !==2) {
-        return Promise.reject({
-            status: 400,
-            msg: `Invalid comment posting request`,
+          status: 400,
+          msg: `Malformed request body, missing username key`,
         });
-    } 
+    }
         return db
             .query(
-               `INSERT INTO comments (votes, created_at, author, body, article_id) 
-                VALUES ($1, $2, $3, $4, $5)
+               `INSERT INTO comments (author, body, article_id) 
+                VALUES ($1, $2, $3)
                 RETURNING *;`,
                 [
-                    0,
-                    dateObj.toLocaleString(),
                     postingComment.username,
                     postingComment.body,
                     article_id,

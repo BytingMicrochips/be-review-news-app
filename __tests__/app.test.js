@@ -113,7 +113,6 @@ describe("Northcoders News API ", () => {
             article_id: 3,
             author: "butter_bridge",
             votes: 0,
-            created_at: '2023-08-16T17:57:37.000Z',
           };
     test("Should return status 201 when new comment successfully posted", () => {
       return request(app)
@@ -128,7 +127,7 @@ describe("Northcoders News API ", () => {
         .post("/api/articles/3/comments")
         .send({ ...commentThis })
         .then(({ body }) => {
-          expect(Object.keys(body)).toEqual(Object.keys({...matchedShape}));
+          expect(body.comment).toMatchObject({...matchedShape});
         });
     });
     test("Should return 400 and error message if user attempts to post empty body", () => {
@@ -146,20 +145,7 @@ describe("Northcoders News API ", () => {
         .send({ body: "The mystery poster strikes again!" })
         .then(({ body: { msg } }) => {
           expect(400);
-          expect(msg).toBe(`No anonymous posting allowed, please log in`);
-        });
-    });
-    test("Should return 400 and error message if request body has undesired keys", () => {
-      return request(app)
-        .post("/api/articles/1/comments")
-        .send({
-          username: "Hackerboi99",
-          body: "Digital chaos!",
-          suspectInput: "DROP TABLE users;",
-        })
-        .expect(400)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe(`Invalid comment posting request`);
+          expect(msg).toBe(`Malformed request body, missing username key`);
         });
     });
   });
