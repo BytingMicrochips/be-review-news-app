@@ -14,21 +14,10 @@ function fetchAllArticles() {
       ORDER BY articles.created_at DESC;`
     )
     .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: `Failed to fetch from database...`,
-        });
-      } else {
         return rows;
-      }
-    });
-}
-
-
-
+      })
+    }
 
 //EXPORT
 module.exports = { fetchAllArticles }
 
-// SELECT * FROM articles JOIN comments ON articles.article_id = comments.article_id;    

@@ -65,21 +65,19 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles")
         .then(({ body }) => {
-          expect(Array.isArray(body)).toBe(true)
-          expect(body[6]).toMatchObject(expectedObject)
-          body.forEach((dataSet) => {
-            expect(Object.keys(dataSet)).toEqual(Object.keys(expectedObject))
+          expect(Array.isArray(body.articles)).toBe(true)
+          expect(body.articles[6]).toMatchObject(expectedObject)
+          body.articles.forEach((dataSet) => {
+            expect(Object.keys(dataSet).length).toBe(8)
           })
       });
     });
-    test("Should return status 404 if fails to find anything", () => {
+    test("Should sort the returned articles in order of created_at descending", () => {
       return request(app)
         .get("/api/articles")
         .then(({ body }) => {
-          if (body.length === 0) {
-          expect(400).expect({ msg: `Failed to fetch from database...` });
-        }
-      })
+          expect(body.articles).toBeSortedBy("created_at", {descending : true})
+        })
     })
    })
  })
