@@ -327,7 +327,7 @@ describe("Northcoders News API ", () => {
             });
         });
       });
-      describe.only("DELETE /api/comments/:comment_id", () => {
+      describe("DELETE /api/comments/:comment_id", () => {
         test("Should return 204 when delete is successful", () => {
           return request(app)
             .delete("/api/comments/1")
