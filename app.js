@@ -1,7 +1,7 @@
 //REQUIRES
-
 const express = require("express");
 const app = express();
+const { getEndpoints } = require("./controllers/endpoints-controller.js");
 const { getTopics } = require("./controllers/topics-controller.js");
 const { getAllArticles } = require("./controllers/allArticles-controller.js");
 const { getArticles } = require("./controllers/articles-controller.js");
@@ -10,9 +10,11 @@ const { getComments } = require("./controllers/comments-controller.js")
 const { patchArticles } = require("./controllers/patch-articles-controller.js");
 app.use(express.json());
 
-//ENDPOINTS
 
+//ENDPOINTS
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);
 
@@ -26,8 +28,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 
 app.post("/api/articles/:article_id/comments", postComments);
 
-//ERROR HANDLING
 
+//ERROR HANDLING
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
@@ -73,6 +75,7 @@ app.use((err, req, res, next) => {
   console.log(err);
   res.status(500).send({ msg: `Sorry! We can't do that right now` });
 });
+
 
 //EXPORTS
 module.exports = app;

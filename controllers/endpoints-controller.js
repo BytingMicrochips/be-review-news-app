@@ -1,4 +1,4 @@
-//REQUIRES
+//REQUIRE
 const jsonEndpoints = require("../endpoints.json");
 
 //FUNCTION
@@ -11,3 +11,4 @@ function getEndpoints(req, res, next) {
 
 //EXPORTS
 module.exports = {getEndpoints}
+

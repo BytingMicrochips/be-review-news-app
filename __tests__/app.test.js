@@ -4,7 +4,8 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
-const { expect } = require("@jest/globals");
+const endpointsJSON = require("../endpoints.json");
+
 
 //PRE AND POST TEST FUNCTIONS
 afterAll(() => {
@@ -20,12 +21,31 @@ describe("Northcoders News API ", () => {
   test("Should return status 404 if invalid endpoint accessed", () => {
     return request(app).get("/api/banana").expect(404);
   });
+  describe("GET /api", () => {
+    test("Should return status 200 when accessed", () => {
+      return request(app)
+        .get("/api")
+        .expect(200);
+    });
+    test("Should return an object", () => {
+      return request(app)
+        .get("/api")
+        .then((endpoints) => {
+          expect(typeof endpoints).toBe("object");
+        });
+    });
+    test("Should return an object with all the data from the endpoints.json", () => {
+      return request(app)
+        .get("/api")
+        .then(({ body }) => { 
+          expect(body).toMatchObject(endpointsJSON)
+        });
+    });
   describe("GET /api/topics", () => {
     test("Should return 200 status code", () => {
       return request(app).get("/api/topics").expect(200);
     });
-
-    test("Should return an array with length equal to total number of topics in database and correct keys", () => {
+    test("Should return an array with length equal to total number of topics in database and have correct keys", () => {
       return request(app)
         .get("/api/topics")
         .then(({ body }) => {
