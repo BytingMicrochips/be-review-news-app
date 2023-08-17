@@ -103,4 +103,83 @@ describe("Northcoders News API ", () => {
         });
     });
   });
+  describe(`PATCH /api/articles/:article_id`, () => {
+    test("Should return status 200 when succcesfully patched article", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: 0 })
+        .expect(200);
+    });
+    test("Should return the chosed article object", () => {
+          const matchedShape = {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: `2020-07-09T20:11:00.000Z`,
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          };
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: 0 })
+        .then(({ body }) => {
+          expect(body).toMatchObject({ ...matchedShape });
+        });
+    });
+    test("Should increase the votes key of the chosen article by value passed", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: 10 })
+        .then(({ body }) => {
+          expect(body.votes).toBe(110);
+        });
+    });
+    test("Should decrease the votes key of the chosen article by value passed", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: -40 })
+        .then(({ body }) => {
+          expect(body.votes).toBe(60);
+        });
+    });
+    test("Should send status 400 and error message if inc_votes  is not a number", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: "DeepFriedIceCream" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`Can not update votes by value DeepFriedIceCream!`);
+        });
+    });
+    test("Should send status 400 and error message if attempt to vote on invalid article_id", () => {
+      return request(app)
+        .patch(`/api/articles/mylkShake`)
+        .send({ inc_votes: 50 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`That input is invalid`);
+        });
+    });
+    test("Should send status 404 and error message if article_id doesn't exist", () => {
+      return request(app)
+        .patch(`/api/articles/999`)
+        .send({ inc_votes: 25 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`That article doesn't exist`);
+        });
+    });
+    test("Should send status 400 and error message if request body contains undesired keys", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ inc_votes: 35, maliciousKey: `DROP TABLE users;` })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(`Detected irregular post request <0_o> `);
+        });
+    });
+  });
 });
