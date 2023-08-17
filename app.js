@@ -12,8 +12,6 @@ app.use(express.json());
 
 
 //ENDPOINTS
-app.use(express.json());
-
 app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);

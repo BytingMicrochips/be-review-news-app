@@ -5,7 +5,6 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const endpointsJSON = require("../endpoints.json");
-const { expect } = require("@jest/globals");
 
 
 //PRE AND POST TEST FUNCTIONS
