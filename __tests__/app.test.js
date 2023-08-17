@@ -63,7 +63,8 @@ describe("Northcoders News API ", () => {
   });
   describe("GET /api/articles/:article_id", () => {
     test("Should return 200 status code", () => {
-      return request(app).get("/api/articles/1").expect(200);
+      return request(app).get("/api/articles/1")
+        .expect(200);
     });
     test("Returned object should have desired keys only", () => {
       const articleTemplate = {
@@ -77,11 +78,11 @@ describe("Northcoders News API ", () => {
           votes: 100,
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        },
+        }
       };
       return request(app)
         .get("/api/articles/1")
-        .then(({ body }) => {
+        .then(({body}) => {
           expect(body).toMatchObject(articleTemplate);
         });
     });

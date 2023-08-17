@@ -8,17 +8,15 @@ app.use(express.json());
 
 //ENDPOINTS
 app.get("/api/topics", getTopics);
+
 app.get("/api/articles/:article_id", getArticles);
+
 app.patch("/api/articles/:article_id", patchArticles);
 
 //ERROR HANDLING
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
-  } else {
-    next(err);
-  }
-});
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
@@ -35,8 +33,6 @@ app.use((err, req, res, next) => {
     next(err);
    }
 });
-
-
 
 app.use((err, req, res, next) => {
   console.log(err);

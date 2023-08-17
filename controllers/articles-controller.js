@@ -14,3 +14,4 @@ function getArticles(req, res, next) {
 
 // EXPORTS
 module.exports = { getArticles };
+

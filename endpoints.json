@@ -36,8 +36,7 @@
     "body": "Bastet walks amongst us, and the cats are taking arms!",
     "created_at": 1596464040000,
     "article_img_url":
-      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-  }
+      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"}
   },
   "PATCH /api/articles/:article_id" : {
     "description": "Allows user to modify votes on a chosen article and returns modified article",
@@ -51,7 +50,6 @@
       "created_at": "2020-07-09T20:11:00.000Z",
       "votes": 1000,
       "article_img_url":
-        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-    }
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"}
   }
 }
