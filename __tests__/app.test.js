@@ -105,7 +105,7 @@ describe("Northcoders News API ", () => {
       };
       return request(app)
         .get("/api/articles/1")
-        .then(({body}) => {
+        .then(({ body }) => {
           expect(body).toMatchObject(articleTemplate);
         });
     });
@@ -204,4 +204,57 @@ describe("Northcoders News API ", () => {
           expect(msg).toBe(`Detected irregular post request <0_o> `);
         });
     });
+  });
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("Should return 200 status code", () => {
+      return request(app).get("/api/articles/1/comments")
+        .expect(200);
+    });
+    test("Should return an array of comment objects with desired keys", () => {
+      const expectedShape = {
+        comment_id: 10,
+        body: "git push origin master",
+        votes: 0,
+        author: "icellusedkars",
+        article_id: 3,
+        created_at: "2020-06-20T07:24:00.000Z",
+      };
+      return request(app)
+        .get("/api/articles/3/comments")
+        .then(({ body }) => {
+          expect(body.comments[1]).toMatchObject(expectedShape)
+        })
+    });
+    test("Should serve comments in order of most recent first", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .then(({ body }) => {
+          expect(body.comments).toBeSortedBy("created_at", {descending : true});
+        });
+    });
+    test("Should send code 400 if invalid article_id is entered", () => {
+      return request(app)
+        .get("/api/articles/burritoSupreme/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe(`burritoSupreme is not a valid article_id`);
+        })
+    });
+    test("Should send code 200 and message if no comments found", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments[0]).toBe(`No comments found...`);
+        });
+    });
+    test("Should send code 404 and message if article does not exist", () => {
+      return request(app)
+        .get("/api/articles/999/comments")
+        .expect(404)
+        .then(({ body: {msg} }) => {
+          expect(msg).toBe(`article_id 999 does not exist`);
+        });
+    });
+    })
   });

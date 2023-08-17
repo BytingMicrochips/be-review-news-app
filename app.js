@@ -4,6 +4,7 @@ const app = express();
 const { getTopics } = require("./controllers/topics-controller.js");
 const { getAllArticles } = require("./controllers/allArticles-controller.js");
 const { getArticles } = require("./controllers/articles-controller.js");
+const { getComments } = require("./controllers/comments-controller.js")
 const { patchArticles } = require("./controllers/patch-articles-controller.js");
 app.use(express.json());
 
@@ -15,6 +16,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticles);
 
 app.patch("/api/articles/:article_id", patchArticles);
+
+app.get("/api/articles/:article_id/comments", getComments);
 
 //ERROR HANDLING
 app.use((err, req, res, next) => {
@@ -34,13 +37,14 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+
   if (err.code === '42601'){
      res.status(500).send(`We are experiencing difficulties... try again later`);
   } else {
     next(err);
    }
 });  
-  
+
 app.use((err, req, res, next) => {
   if (err.status === 404) {
     res.status(err.status).send({ msg: `We can't find that!` });
