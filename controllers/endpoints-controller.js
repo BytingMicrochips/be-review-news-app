@@ -1,16 +1,14 @@
-//REQUIRES
-const { findEndpoints } = require("../models/endpoints-model");
+//REQUIRE
+const jsonEndpoints = require("../endpoints.json");
 
 //FUNCTION
 function getEndpoints(req, res, next) {
-    findEndpoints()
-        .then((endpoints) => {
-            res.status(200).send(endpoints)
-         })
-        .catch((err) => {
-            next(err)
-        });
-};
+  return res.status(200).send(jsonEndpoints)
+    .catch((err) => {
+      next(err);
+    });
+}
 
 //EXPORTS
-module.exports = { getEndpoints };
+module.exports = {getEndpoints}
+
