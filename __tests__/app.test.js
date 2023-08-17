@@ -5,6 +5,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const endpointsJSON = require("../endpoints.json");
+const { expect } = require("@jest/globals");
 
 
 //PRE AND POST TEST FUNCTIONS
@@ -41,6 +42,7 @@ describe("Northcoders News API ", () => {
           expect(body).toMatchObject(endpointsJSON)
         });
     });
+  });
     describe("GET /api/topics", () => {
       test("Should return 200 status code", () => {
         return request(app).get("/api/topics").expect(200);
@@ -192,7 +194,9 @@ describe("Northcoders News API ", () => {
           .send({ inc_votes: "DeepFriedIceCream" })
           .expect(400)
           .then(({ body: { msg } }) => {
-            expect(msg).toBe(`Can not update votes by value DeepFriedIceCream!`);
+            expect(msg).toBe(
+              `Can not update votes by value DeepFriedIceCream!`
+            );
           });
       });
       test("Should send status 400 and error message if attempt to vote on invalid article_id", () => {
@@ -275,6 +279,7 @@ describe("Northcoders News API ", () => {
             expect(msg).toBe(`article_id 999 does not exist`);
           });
       });
+    });
       describe("POST /api/articles/:article_id/comments", () => {
         const commentThis = {
           username: "butter_bridge",
@@ -322,6 +327,27 @@ describe("Northcoders News API ", () => {
             });
         });
       });
-    });
-  })
+      describe.only("DELETE /api/comments/:comment_id", () => {
+        test("Should return 204 when delete is successful", () => {
+          return request(app)
+            .delete("/api/comments/1")
+              .expect(204);
+        });
+        test("Should return 400 and error message when comment_id is invalid type", () => {
+          return request(app)
+            .delete("/api/comments/buffaloFries")
+            .then(({ body: { msg } }) => {
+              expect(400)
+              expect(msg).toBe("buffaloFries is not a valid comment_id");
+            })
+        });
+        test("Should return 200 and error message when nothing deleted", () => {
+          return request(app)
+            .delete("/api/comments/9999")
+            .then(({ body: { msg } }) => {
+              expect(200);
+              expect(msg).toBe("No comment deleted");
+            });
+        });
+      });
 });
