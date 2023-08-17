@@ -120,15 +120,15 @@ describe("Northcoders News API ", () => {
       return request(app)
         .get("/api/articles/3/comments")
         .then(({ body }) => {
-          expect(body[1]).toMatchObject(expectedShape)
+          expect(body.comments[1]).toMatchObject(expectedShape)
         })
     });
     test("Should serve comments in order of most recent first", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .then(({ body }) => {
-          expect(body[0].comment_id).toBe(5);
-          expect(body[10].comment_id).toBe(9);
+          expect(body.comments).toBeSortedBy("created_at", {descending : true});
+          
         });
     });
     test("Should send code 400 if invalid article_id is entered", () => {
@@ -139,20 +139,20 @@ describe("Northcoders News API ", () => {
           expect(body.msg).toBe(`burritoSupreme is not a valid article_id`);
         })
     });
-    test("Should send code 404 if article_id has no comments", () => {
+    test("Should send code 200 and message if no comments found", () => {
       return request(app)
-        .get("/api/articles/8/comments")
-        .expect(404)
+        .get("/api/articles/2/comments")
+        .expect(200)
         .then(({ body }) => {
-          expect(body.msg).toBe(`We couldn't find any comments on that...`);
+          expect(body.comments[0]).toBe(`No comments found...`);
         });
     });
-    test("Should send code 404 if article_id doesn't exist", () => {
+    test("Should send code 404 and message if article does not exist", () => {
       return request(app)
-        .get("/api/articles/888/comments")
+        .get("/api/articles/999/comments")
         .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe(`We couldn't find any comments on that...`);
+        .then(({ body: {msg} }) => {
+          expect(msg).toBe(`article_id 999 does not exist`);
         });
     });
     })
