@@ -4,6 +4,7 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const { expect } = require("@jest/globals");
 
 //PRE AND POST TEST FUNCTIONS
 afterAll(() => {
@@ -60,12 +61,13 @@ describe("Northcoders News API ", () => {
         votes: 100,
         article_img_url:
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        comment_count: "11"
+        comment_count: 11
       };
       return request(app)
         .get("/api/articles")
         .then(({ body }) => {
           expect(Array.isArray(body.articles)).toBe(true)
+          expect(body.articles.length).toBe(13)
           expect(body.articles[6]).toMatchObject(expectedObject)
           body.articles.forEach((dataSet) => {
             expect(Object.keys(dataSet).length).toBe(8)
