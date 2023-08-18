@@ -123,7 +123,8 @@ describe("Northcoders News API ", () => {
             votes: 100,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          },
+            comment_count: 11
+          }
         };
         return request(app)
           .get("/api/articles/1")
@@ -367,7 +368,7 @@ describe("Northcoders News API ", () => {
         });
     });
     });
-describe("GET /api/articles with QUERIES", () => {
+    describe("GET /api/articles with QUERIES", () => {
   test("Should return status 200 for a valid query", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
@@ -438,4 +439,4 @@ describe("GET /api/articles with QUERIES", () => {
         expect(msg).toEqual(`The topic 'coding' has no articles yet`);
       });
   });
-});
+    });
