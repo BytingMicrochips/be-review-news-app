@@ -3,7 +3,7 @@ const {fetchAllArticles} = require("../models/all-articles-model");
 
 // FUNCTION
 function getAllArticles(req, res, next) {
-    fetchAllArticles()
+    fetchAllArticles(req.query)
       .then((returnedArticles) => {
         return res.status(200).send({ articles: returnedArticles });
       })

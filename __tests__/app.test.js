@@ -5,6 +5,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const endpointsJSON = require("../endpoints.json");
+const { expect } = require("@jest/globals");
 
 
 //PRE AND POST TEST FUNCTIONS
@@ -326,4 +327,62 @@ describe("Northcoders News API ", () => {
             });
         });
     });
-    
+
+
+describe("GET /api/articles with QUERIES", () => {
+  test("Should return status 200 for a valid query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200);
+  })
+  test("Should return items only matching the topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .then(({ body: { articles } }) => {
+        articles.forEach((singleArticle) => {
+          expect(singleArticle.topic).toBe("mitch")
+        })
+      })
+  });
+  test("Should return items in order specified defaulting to descending", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { ascending: true })
+      });
+  })
+  test("Should return correct articles if queries are chained together", () => {
+    return request(app)
+      .get("/api/articles?order=asc&&topic=mitch")
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { ascending: true });
+        articles.forEach((singleArticle) => {
+          expect(singleArticle.topic).toBe("mitch");
+        });
+      });
+  });
+  test("Should return status 400 and message if sort_by value is invalid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=caffeine")
+      .then(({ body: { msg } }) => {
+        expect(400)
+        expect(msg).toBe(`Can't sort articles by 'caffeine', sorry!`)
+      });
+  })
+  test("Should return status 400 and message if order value is invalid", () => {
+    return request(app)
+      .get("/api/articles?order=chaotic")
+      .then(({ body: { msg } }) => {
+        expect(400);
+        expect(msg).toBe(`Can't order articles by 'chaotic', sorry!`);
+      });
+  });
+  test("Should return status 404 and error message if query returns no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=sataySummerRolls&&order=ASC")
+      .then(({ body: { msg } }) => {
+        expect(404);
+        expect(msg).toBe(`No articles currently match your query`);
+      });
+  });
+});
