@@ -44,7 +44,7 @@ describe("Northcoders News API ", () => {
           expect(body).toMatchObject(endpointsJSON)
         });
     });
-  });
+    });
     describe("GET /api/topics", () => {
       test("Should return 200 status code", () => {
         return request(app).get("/api/topics").expect(200);
@@ -325,8 +325,7 @@ describe("Northcoders News API ", () => {
         });
       });
     });
-  });
- describe("DELETE /api/comments/:comment_id", () => {
+    describe("DELETE /api/comments/:comment_id", () => {
         test("Should return 204 when delete is successful", () => {
           return request(app)
             .delete("/api/comments/1")
@@ -348,8 +347,8 @@ describe("Northcoders News API ", () => {
               expect(msg).toBe("No comment deleted");
             });
         });
-      });
-  describe("GET /api/users", () => {
+    });
+    describe("GET /api/users", () => {
     test("Should return status 200", () => {
       return request(app)
         .get("/api/users")
@@ -367,5 +366,4 @@ describe("Northcoders News API ", () => {
           });
         });
     });
-  });
-})
+    });
