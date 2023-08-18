@@ -38,7 +38,7 @@ In order to locally connect to the two databases you will need to create your ow
 - *express*
 - *pg*
 
-**Developer dependencies required are, please refer to their individual docs for installation guides:**
+**Please refer to the individual docs for installation guides of these required developer dependencies:**
 
 - *husky*
 - *jest*
