@@ -8,6 +8,7 @@ const { getArticles } = require("./controllers/articles-controller.js");
 const { postComments } = require("./controllers/post-comments-controller.js");
 const { getComments } = require("./controllers/comments-controller.js");
 const { patchArticles } = require("./controllers/patch-articles-controller.js");
+const {getUsers} = require("./controllers/getUsers-controller.js")
 const { deleteComments } = require("./controllers/delete-comments-controller.js");
 app.use(express.json());
 
@@ -28,6 +29,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComments);
 
 app.delete("/api/comments/:comment_id", deleteComments);
+
+app.get("/api/users", getUsers);
 
 
 //ERROR HANDLING
