@@ -17,12 +17,14 @@ beforeEach(() => {
   return seed(data);
 });
 
+
 //TEST SUITE
 describe("Northcoders News API ", () => {
   test("Should return status 404 if invalid endpoint accessed", () => {
     return request(app).get("/api/banana").expect(404);
   });
-  describe("GET /api", () => {
+ })
+    describe("GET /api", () => {
     test("Should return status 200 when accessed", () => {
       return request(app)
         .get("/api")
