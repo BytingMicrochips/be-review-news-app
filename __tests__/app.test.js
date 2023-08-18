@@ -44,7 +44,7 @@ describe("Northcoders News API ", () => {
           expect(body).toMatchObject(endpointsJSON)
         });
     });
-     });
+    });
     describe("GET /api/topics", () => {
       test("Should return 200 status code", () => {
         return request(app).get("/api/topics").expect(200);
@@ -279,8 +279,7 @@ describe("Northcoders News API ", () => {
             expect(msg).toBe(`article_id 999 does not exist`);
           });
       });
-    });
-    describe("POST /api/articles/:article_id/comments", () => {
+      describe("POST /api/articles/:article_id/comments", () => {
         const commentThis = {
           username: "butter_bridge",
           body: `Did you just finish all the coffee?!`,
@@ -296,9 +295,7 @@ describe("Northcoders News API ", () => {
           return request(app)
             .post("/api/articles/3/comments")
             .send({ ...commentThis })
-            .then(() => {
-              expect(201);
-            });
+              .expect(201);
         });
         test("Should return posted comment showing all desired keys", () => {
           return request(app)
@@ -312,8 +309,8 @@ describe("Northcoders News API ", () => {
           return request(app)
             .post("/api/articles/1/comments")
             .send({ username: "Monstera_Munch" })
+            .expect(400)
             .then(({ body: { msg } }) => {
-              expect(400);
               expect(msg).toBe(`Nothing to post!`);
             });
         });
@@ -321,14 +318,55 @@ describe("Northcoders News API ", () => {
           return request(app)
             .post("/api/articles/1/comments")
             .send({ body: "The mystery poster strikes again!" })
+            .expect(400)
             .then(({ body: { msg } }) => {
-              expect(400);
               expect(msg).toBe(`Malformed request body, missing username key`);
             });
         });
+      });
     });
-
-
+    describe("DELETE /api/comments/:comment_id", () => {
+        test("Should return 204 when delete is successful", () => {
+          return request(app)
+            .delete("/api/comments/1")
+              .expect(204);
+        });
+        test("Should return 400 and error message when comment_id is invalid type", () => {
+          return request(app)
+            .delete("/api/comments/buffaloFries")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("buffaloFries is not a valid comment_id");
+            })
+        });
+        test("Should return 404 and error message when nothing deleted", () => {
+          return request(app)
+            .delete("/api/comments/9999")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("No comment deleted");
+            });
+        });
+    });
+    describe("GET /api/users", () => {
+    test("Should return status 200", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200);   
+    })
+    test("Should return an object with all users in array on a key of 'users'", () => {
+      return request(app)
+        .get("/api/users")
+        .then(({ body: { users } }) => {
+          expect(users.length).toBe(4)
+          users.forEach((user) => {
+            expect(user).toHaveProperty("username");
+            expect(user).toHaveProperty("name");
+            expect(user).toHaveProperty("avatar_url");
+          });
+        });
+    });
+    });
 describe("GET /api/articles with QUERIES", () => {
   test("Should return status 200 for a valid query", () => {
     return request(app)
