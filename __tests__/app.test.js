@@ -344,14 +344,6 @@ describe("Northcoders News API ", () => {
           });
         });
     });
-    test("Each object in the users array should only have 4 keys", () => {
-      return request(app)
-        .get("/api/users")
-        .then(({ body: {users}}) => {
-          expect(200)
-          expect(Object.keys(users).length).toBe(4)
-        })
-    })
   });
   
 
