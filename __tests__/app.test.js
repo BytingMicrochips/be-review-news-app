@@ -367,3 +367,75 @@ describe("Northcoders News API ", () => {
         });
     });
     });
+describe("GET /api/articles with QUERIES", () => {
+  test("Should return status 200 for a valid query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200);
+  })
+  test("Should return items only matching the topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .then(({ body: { articles } }) => {
+        articles.forEach((singleArticle) => {
+          expect(singleArticle.topic).toBe("mitch")
+        })
+      })
+  });
+  test("Should return items in order specified", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { ascending: true })
+      });
+  })
+  test("Should return correct articles if queries are chained together", () => {
+    return request(app)
+      .get("/api/articles?order=asc&&topic=mitch")
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { ascending: true });
+        articles.forEach((singleArticle) => {
+          expect(singleArticle.topic).toBe("mitch");
+        });
+      });
+  });
+  test("Should return status 400 and message if sort_by value is invalid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=caffeine")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe(`Can't sort articles by 'caffeine', sorry!`)
+      });
+  })
+  test("Should return status 400 and message if order value is invalid", () => {
+    return request(app)
+      .get("/api/articles?order=chaotic")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe(`Can't order articles by 'chaotic', sorry!`);
+      });
+  });
+  test("Should return status 404 and error message if query returns no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=sataySummerRolls&&order=ASC")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe(`We don't have any articles about sataySummerRolls`);
+      });
+  });
+  test("Should return items sorted by property selected", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&&order=desc")
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("Should return 200 and message if valid topic has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=coding")
+      .expect(200)
+      .then(({ body: { msg } }) => {
+        expect(msg).toEqual(`The topic 'coding' has no articles yet`);
+      });
+  });
+});
