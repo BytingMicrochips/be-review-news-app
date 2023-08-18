@@ -1,12 +1,15 @@
 // REQUIRE
 const db = require("../db/connection.js");
+const devTopicsData = require("../db/data/development-data/topics.js")
+const testTopicsData = require("../db/data/test-data/topics.js");
 
 //FUNCTION 
 function fetchAllArticles({ topic, sort_by = "created_at", order = "DESC" }) {
   const upperOrder = order.toUpperCase();
   const sortByWhitelist = ['author', 'title', 'article_id', 'topic',
-    'created_at', 'votes', 'article_img_url', 'comment_count']
+                           'created_at', 'votes', 'article_img_url', 'comment_count']
   const orderWhiteList = ["asc", "desc", "ASC", "DESC"]
+  const topicWhiteList = ["mitch", "cats", "paper", "coding", "football", "cooking", undefined]
 
   if (!sortByWhitelist.includes(sort_by)) {
        return Promise.reject({
@@ -18,6 +21,12 @@ function fetchAllArticles({ topic, sort_by = "created_at", order = "DESC" }) {
        return Promise.reject({
       status: 400,
       msg: `Can't order articles by '${order}', sorry!`,
+    });
+  }
+  if (!topicWhiteList.includes(topic)) {
+    return Promise.reject({
+      status: 404,
+      msg: `We don't have any articles about ${topic}`,
     });
   }
 
@@ -49,8 +58,8 @@ FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
     return db.query(queryStr, queryValues).then(({ rows }) => {
       if (rows.length === 0) {
       return Promise.reject({
-        status: 404,
-        msg: `No articles currently match your query`,
+        status: 200,
+        msg: `The topic '${topic}' has no articles yet`,
       });
       } else {
         return rows;
