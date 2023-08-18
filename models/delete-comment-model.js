@@ -19,7 +19,7 @@ function removeComment(comment_id) {
             Promise.resolve()
         } else {
             return Promise.reject({
-                status: 400,
+                status: 404,
                 msg: `No comment deleted`
             })
         }
