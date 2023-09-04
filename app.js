@@ -10,10 +10,17 @@ const { getComments } = require("./controllers/comments-controller.js");
 const { patchArticles } = require("./controllers/patch-articles-controller.js");
 const {getUsers} = require("./controllers/getUsers-controller.js")
 const { deleteComments } = require("./controllers/delete-comments-controller.js");
+
+const { apiRouter } = require("./routes/api-router.js");
+const cors = require('cors')
+
 app.use(express.json());
+app.use(cors());
 
 
 //ENDPOINTS
+app.use("/api", apiRouter);
+
 app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);
