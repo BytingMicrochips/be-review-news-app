@@ -1,6 +1,6 @@
 //REQUIRES
 const db = require("../db/connection.js");
-const articlesData = require("../db/data/test-data/articles.js")
+const articlesData = require("../db/data/development-data/articles.js")
 
 //FUNCTION
 function selectComments(article_id) {
