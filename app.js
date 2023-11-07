@@ -10,6 +10,7 @@ const { getComments } = require("./controllers/comments-controller.js");
 const { patchArticles } = require("./controllers/patch-articles-controller.js");
 const {getUsers} = require("./controllers/getUsers-controller.js")
 const { deleteComments } = require("./controllers/delete-comments-controller.js");
+const { patchComments } = require("./controllers/patch-comments-controller.js");
 
 const { apiRouter } = require("./routes/api-router.js");
 const cors = require('cors')
@@ -38,6 +39,8 @@ app.post("/api/articles/:article_id/comments", postComments);
 app.delete("/api/comments/:comment_id", deleteComments);
 
 app.get("/api/users", getUsers);
+
+app.patch("/api/comments/:comment_id", patchComments);
 
 
 //ERROR HANDLING
