@@ -440,3 +440,83 @@ describe("Northcoders News API ", () => {
       });
   });
     });
+
+
+    describe(`PATCH /api/comments/:comment_id`, () => {
+      test("Should return status 200 when succcesfully patched comment", () => {
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: 0 })
+          .expect(200);
+      });
+      test("Should return the chosed comment object", () => {
+        const matchedShape = {
+          comment_id: 1,
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          votes: 16,
+          author: "butter_bridge",
+          article_id: 9,
+          created_at: "2020-04-06T12:17:00.000Z",
+        };
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: 0 })
+          .then(({ body }) => {
+            expect(body).toMatchObject({ ...matchedShape });
+          });
+      });
+      test("Should increase the votes key of the chosen comment by value passed", () => {
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: 10 })
+          .then(({ body }) => {
+            expect(body.votes).toBe(26);
+          });
+      });
+      test("Should decrease the votes key of the chosen comment by value passed", () => {
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: -15 })
+          .then(({ body }) => {
+            expect(body.votes).toBe(1);
+          });
+      });
+      test("Should send status 400 and error message if inc_votes  is not a number", () => {
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: "DeepFriedIceCream" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(
+              `Can not update votes by value DeepFriedIceCream!`
+            );
+          });
+      });
+      test("Should send status 400 and error message if attempt to vote on invalid comment_id", () => {
+        return request(app)
+          .patch(`/api/comments/mylkShake`)
+          .send({ inc_votes: 50 })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(`That input is invalid`);
+          });
+      });
+      test("Should send status 404 and error message if comment_id doesn't exist", () => {
+        return request(app)
+          .patch(`/api/comments/999`)
+          .send({ inc_votes: 25 })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(`That comment doesn't exist`);
+          });
+      });
+      test("Should send status 400 and error message if request body contains undesired keys", () => {
+        return request(app)
+          .patch(`/api/comments/1`)
+          .send({ inc_votes: 35, maliciousKey: `DROP TABLE users;` })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(`Detected irregular post request <0_o> `);
+          });
+      });
+    });
